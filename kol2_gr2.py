@@ -1,51 +1,62 @@
-#
-# Class diary  
-#
-# Create program for handling lesson scores.
-# Use python to handle student (highscool) class scores, and attendance.
-# Make it possible to:
-# - Get students total average score (average across classes)
-# - get students average score in class
-# - hold students name and surname
-# - Count total attendance of student
-# The default interface for interaction should be python interpreter.
-# Please, use your imagination and create more functionalities. 
-# Your project should be able to handle entire school.
-# If you have enough courage and time, try storing (reading/writing) 
-# data in text files (YAML, JSON).
-# If you have even more courage, try implementing user interface.
-
 #!/usr/bin/env python2.6
 
-from collections import defaultdict
 
 class Student(object):
-	def __init__(self,name,sname):
-		self.fname = name
+	def __init__(self,fname,sname):
+		self.fname = fname
 		self.sname = sname
-		self.score = {}
-		
+		self.grades = {}
+		self.attend = {}
 	
-	def add_grade(self,clas,grade):
-		self.score.setdefault(clas, []).append(grade)
-		
-
-class Class(object):
-	def __init__(self,name):
-		self.name = name
-		self.Students = []
+	def addGrade(self,subject,grade):
+		if subject in self.grades.keys():
+			self.grades[subject].append(grade)
+		else:
+			self.grades[subject] = [grade]
 	
-	def add_stud(self,Student):
-		if Student not in self.Students:
-			self.Student = self.Student.append(Student)
-
-	def add_grad(self,Student,grade):
-		if Student in self.Students:
-			Student.add_grade(self.name,grade)
-
-	def add_att(self,Student,grade):
-		if Student in self.Students:
-			Student.add_grade(self.name,grade)
+	def addAtt(self,subject,att):
+		if att>1: att = 1
+		if subject in self.attend.keys(): self.attend[subject].append(att)
+		else: self.attend[subject] = [att]
+	
+	def getScore(self,subject):
+		if subject in self.grades.keys():
+			print sum(self.grades[subject])/float(len(self.grades[subject]))
+		else:
+			print "Brak przedmoitu"
+			
+	def getTotScore(self):
+		s = [sum(i) for i in self.grades.values()]
+		l = [len(i) for i in self.grades.values()]
+		print '%.2f' % float(sum(s)/float(sum(l)))
+		
+	def getAtt(self):
+		s = [sum(i) for i in self.attend.values()]
+		l = [len(i) for i in self.attend.values()]
+		attend  = float(sum(s)/float(sum(l))) * 100
+		print '%d%%' % attend
+		
+stu = Student('Lukasz','Bielak')
+stu.addGrade('Math',4)
+stu.addGrade('Math',4)
+stu.addGrade('Math',5)
+stu.addGrade('Inf',4)
+stu.addGrade('Inf',5)
+stu.addGrade('Phy',4)
+stu.addGrade('Glo',3)
+stu.getScore('Math')
+stu.addAtt('Glo',3)
+stu.addAtt('Glo',0)
+stu.addAtt('Glo',1)
+stu.addAtt('Math',3)
+stu.addAtt('Math',0)
+stu.getTotScore()
+stu.getAtt()
+		
+if __name__ == '__main__':
+        print("Program Glowny")
+else:
+        print("Importowano")
 
 
 
